@@ -1,0 +1,46 @@
+Standalone for MultiFit
+5-May-2015 A.Ledovskoy
+
+First, one need to install "eigen" if it is not installed already
+
+
+
+EXAMPLE 01 is the most trivial case:
+--------------------------------------
+
+- Pulse shape is alpha-beta function that describes EEShape.cc from CMSSW
+- Samples have *uncorrelated* noise fluctuations
+- No OOT pileup
+
+To compile and run:
+g++ -o exercise_01 exercise_01.cc PulseChiSqSNNLS.cc -std=c++11 `root-config --cflags --glibs`
+./exercise_01
+
+Ruuning time is about few minutes on 2.4 GHz Intel i7 processor
+
+Histograms are stored in "output.root" file
+
+
+
+
+...
+
+
+
+EXAMPLE 11
+------------
+
+- Pulse shape is alpha-beta function that describes EEShape.cc from CMSSW
+- Samples have noise correlations as in CMSSW
+- OOT pileup of 50 with 25ns spacing at eta=2.8
+  (Generated with another standalone and stored in minbiasEE_digi_eta28_pu50.root)
+
+To compile and run:
+g++ -o exercise_11 exercise_11.cc PulseChiSqSNNLS.cc -std=c++11 `root-config --cflags --glibs`
+./exercise_11
+
+Histograms are stored in "output.root" file
+
+
+
+
