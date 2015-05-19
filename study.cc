@@ -15,6 +15,7 @@
 #include "TFile.h"
  
 
+#define NToys 1000
 #define NSAMPLES 10
 #define nOOT 19
 #define ADC2GeVEB 0.03
@@ -48,15 +49,46 @@ TF1 *fps;
 
 TFile *fout;
 
-TProfile* hMF_ampRef_ampTrue;
-TH1F* hMF_ampRef_ampNoise;
-TProfile* hMF_ampRef_amp;
-TProfile* hMF_ampNoise_amp;
 
-TProfile* hWg_ampRef_ampTrue;
-TH1F* hWg_ampRef_ampNoise;
-TProfile* hWg_ampRef_amp;
-TProfile* hWg_ampNoise_amp;
+
+
+TProfile* hMF_ampRef_vs_ampTrue;
+TH1F*     hMF_Delta_ampRef_ampNoise;
+TProfile* hMF_relDelta_ampRef_amp_vs_BX;
+TProfile* hMF_relDelta_ampNoise_amp_vs_BX;
+TProfile* hMF_relDelta_ampTrue_amp_vs_BX;
+TProfile* hMF_Ratio_ampRef_amp_vs_BX;
+TProfile* hMF_Ratio_ampNoise_amp_vs_BX;
+TProfile* hMF_Ratio_ampTrue_amp_vs_BX;
+
+TProfile* hWg_ampRef_vs_ampTrue;
+TH1F*     hWg_Delta_ampRef_ampNoise;
+TProfile* hWg_relDelta_ampRef_amp_vs_BX;
+TProfile* hWg_relDelta_ampNoise_amp_vs_BX;
+TProfile* hWg_relDelta_ampTrue_amp_vs_BX;
+TProfile* hWg_Ratio_ampRef_amp_vs_BX;
+TProfile* hWg_Ratio_ampNoise_amp_vs_BX;
+TProfile* hWg_Ratio_ampTrue_amp_vs_BX;
+
+
+
+// TProfile* hMF_ampRef_ampTrue;
+// TH1F*     hMF_ampRef_ampNoise;
+// TProfile* hMF_ampRef_amp;
+// TProfile* hMF_ampNoise_amp;
+// TProfile* hMF_ampTrue_amp;
+// TProfile* hMF_ampRef_amp_Ratio;
+// TProfile* hMF_ampNoise_amp_Ratio;
+// TProfile* hMF_ampTrue_amp_Ratio;
+
+// TProfile* hWg_ampRef_ampTrue;
+// TH1F*     hWg_ampRef_ampNoise;
+// TProfile* hWg_ampRef_amp;
+// TProfile* hWg_ampNoise_amp;
+// TProfile* hWg_ampTrue_amp;
+// TProfile* hWg_ampRef_amp_Ratio;
+// TProfile* hWg_ampNoise_amp_Ratio;
+// TProfile* hWg_ampTrue_amp_Ratio;
 
 // TH2D *h01;
 // TH2D *h02;
@@ -113,27 +145,28 @@ void initHist()
   //  std::cout << "" << std::endl;
   fout = new TFile("output.root","recreate");
 
-  hMF_ampRef_ampTrue = new TProfile("hMF_ampRef_ampTrue", "", 100, -10., 10.);
-  hMF_ampRef_ampNoise = new TH1F("hMF_ampRef_ampNoise", "", 500, -5., 5.);
-  hMF_ampRef_amp = new TProfile("hMF_ampRef_amp", "", 20, 0., 20.);
-  hMF_ampNoise_amp = new TProfile("hMF_ampNoise_amp", "", 20, 0., 20.);
+  hMF_ampRef_vs_ampTrue = new TProfile("hMF_ampRef_vs_ampTrue", "", 100, 0., 10.);
+  hMF_Delta_ampRef_ampNoise = new TH1F("hMF_Delta_ampRef_ampNoise", "", 500, -5., 5.);
 
-  hWg_ampRef_ampTrue = new TProfile("hWg_ampRef_ampTrue", "", 100, -10., 10.);
-  hWg_ampRef_ampNoise = new TH1F("hWg_ampRef_ampNoise", "", 500, -5., 5.);
-  hWg_ampRef_amp = new TProfile("hWg_ampRef_amp", "", 20, 0., 20.);
-  hWg_ampNoise_amp = new TProfile("hWg_ampNoise_amp", "", 20, 0., 20.);
+  hMF_relDelta_ampRef_amp_vs_BX = new TProfile("hMF_relDelta_ampRef_amp_vs_BX", "", 20, 0., 20.);
+  hMF_relDelta_ampNoise_amp_vs_BX = new TProfile("hMF_relDelta_ampNoise_amp_vs_BX", "", 20, 0., 20.);
+  hMF_relDelta_ampTrue_amp_vs_BX = new TProfile("hMF_reldelta_ampTrue_amp_vs_BX", "", 20, 0., 20.);
+  hMF_Ratio_ampRef_amp_vs_BX = new TProfile("hMF_Ratio_ampRef_amp_vs_BX", "", 20, 0., 20.);
+  hMF_Ratio_ampNoise_amp_vs_BX = new TProfile("hMF_Ratio_ampNoise_amp_vs_BX", "", 20, 0., 20.);
+  hMF_Ratio_ampTrue_amp_vs_BX = new TProfile("hMF_Ratio_ampTrue_amp_vs_BX", "", 20, 0., 20.);
 
 
-//   h01 = new TH2D("h01", "dA",     50, -2.0, 3.0, 1000, -2.0, 2.0);
-//   h02 = new TH2D("h02", "err",    50, -2.0, 3.0, 1000,  0.0, 2.0);
-//   h03 = new TH2D("h03", "dA/err", 50, -2.0, 3.0, 1000, -10.0, 10.0);
-//   h04 = new TH2D("h04", "chi2",   50, -2.0, 3.0, 1000,   0.0, 100.0);
-//   h05 = new TH2D("h05", "log(chi2)",   50, -2.0, 3.0, 1000,  -2., 6.);
-//   h06 = new TH2D("h06", "dA",     50, -2.0, 3.0, 1000, -10.0, 10.0);
-//   h07 = new TH2D("h07", "dA",     50, -2.0, 3.0, 1000, -10.0, 10.0);
+  hWg_ampRef_vs_ampTrue = new TProfile("hWg_ampRef_vs_ampTrue", "", 100, 0., 10.);
+  hWg_Delta_ampRef_ampNoise = new TH1F("hWg_Delta_ampRef_ampNoise", "", 500, -5., 5.);
 
-//   h11 = new TH1D("h11", "IT PU",   1000,  0.0, 50.0);
-//   h12 = new TH1D("h12", "IT - OOT PU", 1000,  -20.0, 20.0);
+  hWg_relDelta_ampRef_amp_vs_BX = new TProfile("hWg_relDelta_ampRef_amp_vs_BX", "", 20, 0., 20.);
+  hWg_relDelta_ampNoise_amp_vs_BX = new TProfile("hWg_relDelta_ampNoise_amp_vs_BX", "", 20, 0., 20.);
+  hWg_relDelta_ampTrue_amp_vs_BX = new TProfile("hWg_reldelta_ampTrue_amp_vs_BX", "", 20, 0., 20.);
+  hWg_Ratio_ampRef_amp_vs_BX = new TProfile("hWg_Ratio_ampRef_amp_vs_BX", "", 20, 0., 20.);
+  hWg_Ratio_ampNoise_amp_vs_BX = new TProfile("hWg_Ratio_ampNoise_amp_vs_BX", "", 20, 0., 20.);
+  hWg_Ratio_ampTrue_amp_vs_BX = new TProfile("hWg_Ratio_ampTrue_amp_vs_BX", "", 20, 0., 20.);
+
+
 
 }
 
@@ -279,30 +312,15 @@ void run()
   PulseChiSqSNNLS pulsefuncSN;
   PulseChiSqSNNLS pulsefuncRef;
 
-  /*
-  int ntot = tr->GetEntries();
-  for(int ievt=0; ievt<ntot; ++ievt){
-
-    tr->GetEntry(ievt);
-
-    h11->Fill( emb[20] );
-    double sum0 = 0;
-    double sum1 = 0;
-    for(int i=0; i<25; i++){
-      sum0 += 1;
-      sum1 += emb[i];
-    }
-    sum0 -= 1.;
-    sum1 -= emb[20];
-    h12->Fill( emb[20] - sum1 / sum0 );
-  */
-
   //FIXME need to decide nToys
+  for(int iToy=0; iToy<NToys; ++iToy){
+    if(iToy % 200 == 0) std::cout << " >>> iToy = " << iToy << std::endl;
   for(unsigned int iOOT=0; iOOT< nOOT; ++iOOT){
     //    double ampPUIT   = emb[20] / 0.069;
     double ampPUIT   = pow( 10., -1.0 + 5.0 * rnd.Rndm() );
     double ampSignal = pow( 10., -1.0 + 5.0 * rnd.Rndm() );
     double ampTrue = ampSignal + ampPUIT;
+    double ampRef = ampSignal;
 
     //FIX why true and not real?
 
@@ -412,10 +430,8 @@ void run()
     }
 
 
-    double logA = log10(ampTrue * 0.069);
-
+    /*
     if(logA - aMaxR * 0.069 > 2.){
-
     TH1F* h_amp = new TH1F("h_amp", "", 30, 0., 30.);
     TH1F* h_ampN = new TH1F("h_ampN", "", 30, 0., 30.);
     TH1F* h_ampR = new TH1F("h_ampR", "", 30, 0., 30.);
@@ -441,17 +457,37 @@ void run()
     //    return;
     
     std::cout << " logA = " << logA << std::endl;
-    }
+    }*/
 
-    hMF_ampRef_ampTrue->Fill(logA, aMaxR * 0.069);
-    hMF_ampRef_ampNoise->Fill((aMaxR - aMaxSN) * 0.069);
-    hMF_ampRef_amp->Fill(iOOT, (aMax - aMaxR) * 0.069);
-    hMF_ampNoise_amp->Fill(iOOT, (aMax - aMaxSN) * 0.069);
 
-    hWg_ampRef_ampTrue->Fill(logA, aWgtR * 0.069);
-    hWg_ampRef_ampNoise->Fill((aWgtR - aWgtSN) * 0.069);
-    hWg_ampRef_amp->Fill(iOOT, (aWgt - aWgtR) * 0.069);
-    hWg_ampNoise_amp->Fill(iOOT, (aWgt - aWgtSN) * 0.069);
+    double logA = log10(ampRef * 0.069);
+    //    double logA = log10(ampTrue * 0.069);
+
+    //    hMF_ampRef_ampTrue->Fill(logA, aMaxR * 0.069);
+    hMF_ampRef_vs_ampTrue->Fill(ampRef, aMaxR);
+    hMF_Delta_ampRef_ampNoise->Fill((aMaxR - aMaxSN) * 0.069);
+
+    //    if(aMaxSN+aMax == 0) std::cout << " >>>> ahhhhhh " << std::endl;
+
+    if(aMaxR != 0.)    hMF_relDelta_ampRef_amp_vs_BX->Fill(iOOT, (aMax - aMaxR) / (aMaxR));
+    if(aMaxSN != 0.)    hMF_relDelta_ampNoise_amp_vs_BX->Fill(iOOT, (aMax - aMaxSN) / (aMaxSN));
+    if(ampRef != 0.)    hMF_relDelta_ampTrue_amp_vs_BX->Fill(iOOT, (aMax - ampRef) / (ampRef));
+
+    if(aMaxR != 0.) hMF_Ratio_ampRef_amp_vs_BX->Fill(iOOT, (aMax/aMaxR));
+    if(aMaxSN != 0.) hMF_Ratio_ampNoise_amp_vs_BX->Fill(iOOT, (aMax/aMaxSN));
+    if(ampRef != 0.) hMF_Ratio_ampTrue_amp_vs_BX->Fill(iOOT, (aMax/ampRef));
+
+    //    hWg_ampRef_ampTrue->Fill(logA, aWgtR * 0.069);
+    hWg_ampRef_vs_ampTrue->Fill(ampRef, aWgtR);
+    hWg_Delta_ampRef_ampNoise->Fill((aWgtR - aWgtSN) * 0.069);
+
+    if(aWgtR != 0.)    hWg_relDelta_ampRef_amp_vs_BX->Fill(iOOT, (aWgt - aWgtR) / (aWgtR));
+    if(aWgtSN != 0.)    hWg_relDelta_ampNoise_amp_vs_BX->Fill(iOOT, (aWgt - aWgtSN) / (aWgtSN));
+    if(ampRef != 0.)    hWg_relDelta_ampTrue_amp_vs_BX->Fill(iOOT, (aWgt - ampRef) / (ampRef));
+
+    if(aWgtR != 0) hWg_Ratio_ampRef_amp_vs_BX->Fill(iOOT, (aWgt/aWgtR));
+    if(aWgtSN != 0) hWg_Ratio_ampNoise_amp_vs_BX->Fill(iOOT, (aWgt/aWgtSN));
+    if(ampRef != 0) hWg_Ratio_ampTrue_amp_vs_BX->Fill(iOOT, (aWgt/ampRef));
 
   
     /*  
@@ -475,6 +511,7 @@ void run()
     */
 
   } // looping over PU events
+  }//loop over toys
 }
 
 void saveHist()
@@ -491,14 +528,48 @@ void saveHist()
 //   h11->Write();
 //   h12->Write();
 
-  hMF_ampRef_ampTrue->Write();
-  hMF_ampRef_ampNoise->Write();
-  hMF_ampRef_amp->Write();
-  hMF_ampNoise_amp->Write();
-  hWg_ampRef_ampTrue->Write();
-  hWg_ampRef_ampNoise->Write();
-  hWg_ampRef_amp->Write();
-  hWg_ampNoise_amp->Write();
+
+  hMF_ampRef_vs_ampTrue->Write();
+  hMF_Delta_ampRef_ampNoise->Write();
+  hMF_relDelta_ampRef_amp_vs_BX->Write();
+  hMF_relDelta_ampNoise_amp_vs_BX->Write();
+  hMF_relDelta_ampTrue_amp_vs_BX->Write();
+  hMF_Ratio_ampRef_amp_vs_BX->Write();
+  hMF_Ratio_ampNoise_amp_vs_BX->Write();
+  hMF_Ratio_ampTrue_amp_vs_BX->Write();
+
+  hWg_ampRef_vs_ampTrue->Write();
+  hWg_Delta_ampRef_ampNoise->Write();
+  hWg_relDelta_ampRef_amp_vs_BX->Write();
+  hWg_relDelta_ampNoise_amp_vs_BX->Write();
+  hWg_relDelta_ampTrue_amp_vs_BX->Write();
+  hWg_Ratio_ampRef_amp_vs_BX->Write();
+  hWg_Ratio_ampNoise_amp_vs_BX->Write();
+  hWg_Ratio_ampTrue_amp_vs_BX->Write();
+
+
+
+
+//   hMF_ampRef_ampTrue->Write();
+//   hMF_ampRef_ampNoise->Write();
+
+//   hMF_ampRef_amp->Write();
+//   hMF_ampNoise_amp->Write();
+//   hMF_ampTrue_amp->Write();
+//   hMF_ampRef_amp_Ratio->Write();
+//   hMF_ampNoise_amp_Ratio->Write();
+//   hMF_ampTrue_amp_Ratio->Write();
+
+//   hWg_ampRef_ampTrue->Write();
+//   hWg_ampRef_ampNoise->Write();
+
+//   hWg_ampRef_amp->Write();
+//   hWg_ampNoise_amp->Write();
+//   hWg_ampTrue_amp->Write();
+//   hWg_ampRef_amp_Ratio->Write();
+//   hWg_ampNoise_amp_Ratio->Write();
+//   hWg_ampTrue_amp_Ratio->Write();
+  
 
   fout->Close();
 }
